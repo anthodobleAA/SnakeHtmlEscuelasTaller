@@ -5,6 +5,7 @@
   <title>Snake Quiz HTML con Imagen</title>
   <style>
     body {
+      
       background-image: url(img/fondo.png);
       display: flex;
       justify-content: center;
@@ -15,17 +16,20 @@
       flex-direction: column;
     }
     canvas {
-      background-size: cover;
-      border: 2px solid #ff0c0c;
-      margin-top: 10px;
-    }
+   
+  background-size: cover;
+  border: 2px solid #ff0c0c;
+  margin-top: 10px;
+}
+
+    
     #question {
       color: rgb(255, 255, 255);
       font-size: 20px;
       margin-bottom: 5px;
       min-height: 24px;
     }
-    footer {
+     footer {
       background-color: #22222263;
       color: white;
       text-align: center;
@@ -38,12 +42,12 @@
 <body>
   <h1><img src="img/logo.png" width="200px" alt="snake html"></h1>
   <div id="main-container">
-    <div id="question"></div>
-    <canvas id="game" width="600" height="600"></canvas>
-  </div>
+  <div id="question"></div>
+  <canvas id="game" width="600" height="600"></canvas>
+</div>
 
-  <footer>
-    <p>2025 Anthony Veliz.Escuelas taller.</p>
+<footer>
+    <p> 2025 Anthony Veliz.Escuelas taller.</p>
   </footer>
 
 <script>
@@ -64,15 +68,13 @@
 
   const appleImg = new Image();
   appleImg.src = "img/manzana.png";
+const snakeImg = new Image();
+snakeImg.src = "img/serpiente.png"; 
+const snakeHeadImg = new Image();
+snakeHeadImg.src = "img/cabeza.png"; 
 
-  const snakeImg = new Image();
-  snakeImg.src = "img/serpiente.png"; 
-
-  const snakeHeadImg = new Image();
-  snakeHeadImg.src = "img/cabeza.png"; 
-
-  const snakeBodyImg = new Image();
-  snakeBodyImg.src = "img/cuerpo.png";
+const snakeBodyImg = new Image();
+snakeBodyImg.src = "img/cuerpo.png"; 
 
   
 function shuffleArray(array) {
