@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Snake Quiz HTML con Imagen</title>
+  <style>
+    body {
+      
+      background-image: url(img/fondo.png);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: monospace;
+      color: rgb(255, 255, 255);
+      flex-direction: column;
+    }
+    canvas {
+   
+  background-size: cover;
+  border: 2px solid #ff0c0c;
+  margin-top: 10px;
+}
+
+    
+    #question {
+      color: rgb(255, 255, 255);
+      font-size: 20px;
+      margin-bottom: 5px;
+      min-height: 24px;
+    }
+     footer {
+      background-color: #22222263;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1><img src="img/logo.png" width="200px" alt="snake html"></h1>
+  <div id="main-container">
+  <div id="question"></div>
+  <canvas id="game" width="600" height="600"></canvas>
+</div>
+
+<footer>
+    <p> 2025 Anthony Veliz.Escuelas taller.</p>
+  </footer>
+
+<script>
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+  const questionDiv = document.getElementById("question");
+
+  const gridSize = 25;
+  const tileCount = canvas.width / gridSize;
+
+  let snake = [{ x: 10, y: 10 }];
+  let dx = 1;
+  let dy = 0;
+  let gameOver = false;
+
+  const fondoImg = new Image();
+  fondoImg.src = "img/fondo.png"; 
+
+  const appleImg = new Image();
+  appleImg.src = "img/Manzana.png";
+const snakeImg = new Image();
+snakeImg.src = "img/serpiente.png"; 
+const snakeHeadImg = new Image();
+snakeHeadImg.src = "img/cabeza.png"; 
+
+const snakeBodyImg = new Image();
+snakeBodyImg.src = "img/cuerpo.png"; 
+
+  
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+const questions = [
+  {
+    question: "¿Cual etiqueta es una lista desordenada?",
+    options: ["<ul>", "<li>", "<ol>", "<list>"],
+    correct: "<ul>"
+  },
+  {
+    question: "¿cual etiqueta es un parrafo?",
+    options: ["<p>", "<pr>", "</p>", "<tex>"],
+    correct: "<p>"
+  },
+  {
+    question: "¿Qué es lo primero que se pone en un HTML?",
+    options: ["<html>", "<!DOCTYPE html>", "<head>", "<body>"],
+    correct: "<!DOCTYPE html>"
+  },
+  {
+    question: "¿Cuál etiqueta es la cabecera?",
+    options: ["<header>", "<body>", "<footer>", "<head>"],
+    correct: "<head>"
+  },
+  {
+    question: "¿Dónde va el título del documento?",
+    options: ["<title>", "<h1>", "<titulo>", "<header>"],
+    correct: "<title>"
+  },
+  {
+    question: "¿Cuál es la etiqueta correcta para insertar una imagen?",
+    options: ["<img>", "<image>", "<picture>", "src>"],
+    correct: "<img>"
+  },
+  {
+    question: "¿Qué etiqueta se usa para crear un enlace?",
+    options: ["<enlace>", "<a>", "<href>", "<url>"],
+    correct: "<a>"
+  },
+  {
+    question: "¿Ta bien?",
+    options: ["si", "no"],
+    correct: "si"
+  },
+  {
+    question: "¿ Qué significa HTML?",
+    options: ["Hyper Trainer Marking Language","HyperText Markup Language "],
+    correct: "HyperText Markup Language "
+  },
+  {
+    question: "¿Qué atributo de <img> especifica la ruta de la imagen?",
+    options: ["href","src","alt","link"],
+    correct: "src"
+  },
+  {
+    question: "¿Qué etiqueta define un encabezado de nivel 1?",
+    options: ["<head1>","<h1>","</h1/>","<enca1>"],
+    correct: "<h1>"
+  },
+  {
+    question: "¿Qué atributo se usa para dar un nombre único a un elemento HTML?",
+    options: ["class","id","name","ref"],
+    correct: "id"
+  },{
+    question: "¿Qué etiqueta se usa para crear una celda de tabla?",
+    options: ["<cell>","<td>","<tr>","<table>"],
+    correct: "<td>"
+  },{
+    question: "¿Qué etiqueta se usa para crear una celda de tabla?",
+    options: ["<table>","<thead>","<tbody>","<tr>"],
+    correct: "<tbody>"
+  },{
+    question: "¿Cuál es la etiqueta correcta para crear un formulario?",
+    options: ["<imput>","<form>","<submit>","<fieldset>"],
+    correct: "<form>"
+  },{
+    question: "¿Qué etiqueta define una lista ordenada?",
+    options: ["<ol>","<ul>","<li>","<list>"],
+    correct: "<ol>"
+  },{
+    question: "¿Qué etiqueta define el contenido de navegación en HTML5?",
+    options: ["<nav>","<menu>","<section>","<path>"],
+    correct: "<nav>"
+  },{
+    question: "¿Qué etiqueta HTML se utiliza para insertar un video?",
+    options: ["<media>","<movie>","<video>","<clip>"],
+    correct: "<video>"
+  },{
+    question: "¿Qué atributo de <video> se usa para mostrar controles al usuario?",
+    options: ["buttons","interface","controls","manage"],
+    correct: "controls"
+  },{
+    question: "¿Qué etiqueta define un salto de línea?",
+    options: ["<linebreak>","<Lb>","<br>","<nl>"],
+    correct: "<br>"
+  },{
+    question: "¿Qué atributo de <input> define el tipo de dato que se ingresa?",
+    options: ["date","name","type","value"],
+    correct: "type"
+  },
+  {
+    question: "¿Qué atributo proporciona un texto que aparece cuando el cursor pasa por encima?",
+    options: ["name","title","hover","alt"],
+    correct: "title"
+  },{
+    question: "¿Qué atributo en <input> define el valor por defecto?",
+    options: ["default","value","preset","text"],
+    correct: "value"
+  },{
+    question: "¿Qué etiqueta HTML se utiliza para definir una lista de definicione?",
+    options: ["<dl>","<li>","<ol>","<deflist>"],
+    correct: "<dl>"
+  },{
+    question: "¿Qué etiqueta HTML define un botón?",
+    options: ["<submit>","<input type=botton","<btn>","<button>"],
+    correct: "<button>"
+  },{
+    question: "¿Qué etiqueta se usa para definir el encabezado de una tabla?",
+    options: ["<header>","<row>","<th>"],
+    correct: "<th>"
+  },{
+    question: "¿Qué atributo de <table> define un borde visible?",
+    options: ["outline","border","edge","frame"],
+    correct: "border"
+  },{
+    question: "¿Qué atributo se usa para unir varias columnas en una celda?",
+    options: ["rowspan","coljoin","colspan","merge"],
+    correct: "colspan"
+  },{
+    question: "¿Qué etiqueta define un contenido de dirección de contacto?",
+    options: ["<contact>","<anddress>","<info>","<footer"],
+    correct: "<address>"
+  },{
+    question: "¿Qué etiqueta agrupa contenido en secciones generales sin semántica específica?",
+    options: ["<span>","<div>","<section>","<group>"],
+    correct: "<div>"
+  },{
+    question: "¿Qué atributo de <form> indica a qué URL se enviarán los datos?",
+    options: ["<action","destination","sendto","method"],
+    correct: "action"
+  },{
+    question: "¿Qué etiqueta se usa para definir encabezado de sección sin especificar nivel?",
+    options: ["<header","<h0>","<title>","<head>"],
+    correct: "<header>"
+  },{
+    question: "¿Qué etiqueta se usa para una línea divisoria visible entre secciones?",
+    options: ["<br>","<hr>","<line>","<div>"],
+    correct: "<hr>"
+  },{
+    question: "¿Qué atributo de <img> proporciona texto alternativo si la imagen no carga?",
+    options: ["alt","title","caption","label"],
+    correct: "alt"
+  },{
+    question: "¿Dónde se debe colocar el elemento <title> en un documento HTML?",
+    options: ["dentro del <head>","dentro del <body>"],
+    correct: "dentro del <head>"
+  },{
+    question: "¿Cuál de estas etiquetas define contenido enfático o en cursiva con significado?",
+    options: ["<i>","<b>","<em>","<u>"],
+    correct: "<em>"
+  },{
+    question: "mazana gratis",
+    options: ["manzana"],
+    correct: "manzana"
+  },{
+    question: "manzana gratis",
+    options: ["manzana"],
+    correct: "manzana"
+  },
+  {
+    question: "¿Qué etiqueta se usa para el contenido principal?",
+    options: ["<main>", "<footer>", "<section>", "<div>"],
+    correct: "<main>"
+  }
+];
+
+
+shuffleArray(questions);
+
+let currentQuestionIndex = 0;
+let correctFood = null;
+let wrongFoods = [];
+let inputAllowed = true; 
+
+document.addEventListener("keydown", e => {
+  if (!inputAllowed) return; 
+
+  if (e.key === "ArrowUp" && dy !== 1) {
+    dx = 0; dy = -1;
+    inputAllowed = false;
+  } else if (e.key === "ArrowDown" && dy !== -1) {
+    dx = 0; dy = 1;
+    inputAllowed = false;
+  } else if (e.key === "ArrowLeft" && dx !== 1) {
+    dx = -1; dy = 0;
+    inputAllowed = false;
+  } else if (e.key === "ArrowRight" && dx !== -1) {
+    dx = 1; dy = 0;
+    inputAllowed = false;
+  }
+});
+
+function spawnFood() {
+  let pos;
+  let safe;
+  const margin = 4; 
+  do {
+    pos = {
+      x: Math.floor(Math.random() * (tileCount - margin * 2)) + margin,
+      y: Math.floor(Math.random() * (tileCount - margin * 2)) + margin
+    };
+    safe = !snake.some(s => s.x === pos.x && s.y === pos.y) &&
+           !(correctFood && correctFood.x === pos.x && correctFood.y === pos.y) &&
+           !wrongFoods.some(w => w.pos.x === pos.x && w.pos.y === pos.y);
+  } while (!safe);
+  return pos;
+}
+
+function relocateFoods() {
+  correctFood = {
+    ...spawnFood(),
+    tag: questions[currentQuestionIndex].correct
+  };
+
+  wrongFoods = [];
+  const currentOptions = questions[currentQuestionIndex].options.filter(opt => opt !== questions[currentQuestionIndex].correct);
+  for (let i = 0; i < Math.min(3, currentOptions.length); i++) {
+    wrongFoods.push({
+      pos: spawnFood(),
+      tag: currentOptions[i]
+    });
+  }
+}
+
+function drawTagImageWithText(text, x, y) {
+  const px = x * gridSize;
+  const py = y * gridSize;
+  const size = gridSize;
+
+  ctx.drawImage(appleImg, px, py, size, size);
+
+  ctx.fillStyle = "white";
+  ctx.font = "17px monospace";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  ctx.fillText(text, px + size / 2, py + size / 2);
+}
+
+function checkCollision(a, b) {
+  return a.x === b.x && a.y === b.y;
+}
+
+function gameLoop() {
+  if (gameOver) {
+    ctx.fillStyle = "red";
+    ctx.font = "30px sans-serif";
+    ctx.fillText("GAME OVER", 130, 250);
+    return;
+  }
+
+  questionDiv.textContent = "Pregunta: " + questions[currentQuestionIndex].question;
+
+  const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+  if (
+    head.x < 0 || head.y < 0 ||
+    head.x >= tileCount || head.y >= tileCount ||
+    snake.some(seg => seg.x === head.x && seg.y === head.y)
+  ) {
+    gameOver = true;
+    return;
+  }
+
+  snake.unshift(head);
+
+  let ateCorrect = false;
+
+  if (checkCollision(head, correctFood)) {
+    currentQuestionIndex++;
+    ateCorrect = true;
+    if (currentQuestionIndex >= questions.length) {
+      alert("🎉 ¡Has completado todas las preguntas!");
+      location.reload();
+      return;
+    }
+    relocateFoods();
+  } else if (wrongFoods.some(w => checkCollision(head, w.pos))) {
+    const wrong = wrongFoods.find(w => checkCollision(head, w.pos));
+    alert("❌ Respuesta incorrecta: " + wrong.tag);
+    gameOver = true;
+    return;
+  }
+
+  if (!ateCorrect) {
+    snake.pop();
+  }
+
+  if (fondoImg.complete) {
+    ctx.drawImage(fondoImg, 0, 0, canvas.width, canvas.height);
+  }
+
+  snake.forEach((seg, index) => {
+    const img = (index === 0) ? snakeHeadImg : snakeBodyImg;
+
+    if (img.complete) {
+      ctx.drawImage(img, seg.x * gridSize, seg.y * gridSize, gridSize, gridSize);
+    } else {
+      ctx.fillStyle = (index === 0) ? "darkgreen" : "lime";
+      ctx.fillRect(seg.x * gridSize, seg.y * gridSize, gridSize - 2, gridSize - 2);
+    }
+  });
+
+  if (appleImg.complete) {
+    drawTagImageWithText(correctFood.tag, correctFood.x, correctFood.y);
+    wrongFoods.forEach(w => {
+      drawTagImageWithText(w.tag, w.pos.x, w.pos.y);
+    });
+  }
+
+  inputAllowed = true; 
+}
+
+relocateFoods();
+setInterval(gameLoop, 150);
+</script>
+
+</body>
+</html>
