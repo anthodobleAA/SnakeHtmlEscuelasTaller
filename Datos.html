@@ -6,7 +6,7 @@
   <style>
     body {
       
-      background-image: url(img/fondo.png);
+      background-image: url(./img/fondo.png);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -40,7 +40,7 @@
   </style>
 </head>
 <body>
-  <h1><img src="img/logo.png" width="200px" alt="snake html"></h1>
+  <h1><img src="./img/logo.png" width="200px" alt="snake html"></h1>
   <div id="main-container">
   <div id="question"></div>
   <canvas id="game" width="600" height="600"></canvas>
@@ -64,17 +64,17 @@
   let gameOver = false;
 
   const fondoImg = new Image();
-  fondoImg.src = "img/fondo.png"; 
+  fondoImg.src = "./img/fondo.png"; 
 
   const appleImg = new Image();
-  appleImg.src = "img/Manzana.png";
+  appleImg.src = "./img/Manzana.png";
 const snakeImg = new Image();
-snakeImg.src = "img/serpiente.png"; 
+snakeImg.src = "./img/serpiente.png"; 
 const snakeHeadImg = new Image();
-snakeHeadImg.src = "img/cabeza.png"; 
+snakeHeadImg.src = "./img/cabeza.png"; 
 
 const snakeBodyImg = new Image();
-snakeBodyImg.src = "img/cuerpo.png"; 
+snakeBodyImg.src = "./img/cuerpo.png"; 
 
   
 function shuffleArray(array) {
